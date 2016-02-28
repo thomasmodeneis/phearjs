@@ -1,9 +1,9 @@
 [
   {
     "development": {
-      "workers": 2,
+      "workers": 6,
       "base_port": 8100,
-      "cache_ttl": 3600,
+      "cache_ttl": 604800,
       "memcached": {
         "servers": ["localhost:11211"],
         "options": {
@@ -15,8 +15,7 @@
         "port": 8183,
         "timeout": 10000,
         "parse_delay": 5000,
-        "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36",
-        "allowed_clients": ["127.0.0.1"]
+        "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36"
       }
     },
     "production": {
