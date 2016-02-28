@@ -68,10 +68,11 @@ run_server = ->
   logger.info "worker", "Running PhantomJS worker." if service
 
 # Fetch and parse a page
-fetch_url = (url, response, this_inst, parse_delay, request_headers) ->
+fetch_url = (url, response, this_inst, parse_delay, request_headers, onResourceReceivedList) ->
   final_url = url # store a final URL for redirects
   headers = {} # store response headers
   had_js_errors = false # know if there were any JS errors
+  onResourceReceivedList = [];
   
   # We keep the completion status, because callback is called twice by PhantomJS (?)
   done = false
@@ -93,6 +94,7 @@ fetch_url = (url, response, this_inst, parse_delay, request_headers) ->
   # received this callback is triggered, so only store if the URL is final.
   page_inst.onResourceReceived = (response) ->
     decoded_url = decodeURIComponent(response.url)
+    onResourceReceivedList.push(decoded_url);
     headers[decoded_url] = response.headers if decoded_url is final_url and response.stage is "end"
 
   # When the resource times out an error is thrown
@@ -155,7 +157,8 @@ fetch_url = (url, response, this_inst, parse_delay, request_headers) ->
           request_headers: request_headers
           response_headers: fetch_url_headers
           had_js_errors: had_js_errors
-          content: strip_scripts(page_inst.content)
+          content: strip_scripts(page_inst.content),
+          onResourceReceivedList:onResourceReceivedList
         )
         close_response this_inst, status, response
         page_inst.close()

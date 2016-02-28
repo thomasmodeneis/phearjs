@@ -7,13 +7,13 @@
       "memcached": {
         "servers": ["localhost:11211"],
         "options": {
-          "retries": 0,
-          "timeout": 500
+          "retries": 1,
+          "timeout": 2500
         }
       },
       "worker": {
         "port": 8183,
-        "timeout": 10000,
+        "timeout": 20000,
         "parse_delay": 5000,
         "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36"
       }
