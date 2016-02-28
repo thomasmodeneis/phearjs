@@ -90,6 +90,9 @@
             'real-ip': req.headers['real-ip']
           }
         }, function(error, response, body) {
+          if (error || !response) {
+            return respond(500, body);
+          }
           if (response.statusCode === 200) {
             memcached.set(cache_key, body, config.cache_ttl, function() {
               return logger.info("phear", "Stored " + req.query.fetch_url + " in cache");

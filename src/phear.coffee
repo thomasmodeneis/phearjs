@@ -109,6 +109,8 @@ handle_request = (req, res) ->
 
       # Make the request to the worker and store in cache if status is 200 (don't store bad requests)
       request {url: worker_request_url, headers: {'real-ip': req.headers['real-ip']}}, (error, response, body) ->
+        if error || !response
+          return respond(500, body)
         if response.statusCode == 200
           memcached.set cache_key, body, config.cache_ttl, ->
             logger.info "phear", "Stored #{req.query.fetch_url} in cache"
