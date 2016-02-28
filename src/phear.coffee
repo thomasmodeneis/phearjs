@@ -54,9 +54,9 @@ handle_request = (req, res) ->
   # In all environments except development, check the IPs and only allow pre-defined addresses.
   # We do this both here and in the worker to prevent not-allowed IPs to bypass this and make  
   # requests directly to the worker.
-  if mode != "development" and not ip_allowed(req.headers["real-ip"])
-    res.statusCode = 403
-    return close_response("phear", "Forbiddena.", res)
+#  if mode != "development" and not ip_allowed(req.headers["real-ip"])
+#    res.statusCode = 403
+#    return close_response("phear", "Forbiddena.", res)
 
   # Check if the necessary params are set and aren't empty
   if not req.query.fetch_url?

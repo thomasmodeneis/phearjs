@@ -3,9 +3,9 @@
   var Config, Logger, Memcached, argv, close_response, config, express, favicon, handle_request, ip_allowed, logger, memcached, mode, random_worker, request, respawn, serve, spawn, stop, url, workers;
 
   spawn = function(n) {
-    var i, worker_config, _, _i, _len, _results;
-    _results = [];
-    for (i = _i = 0, _len = workers.length; _i < _len; i = ++_i) {
+    var _, i, j, len, results, worker_config;
+    results = [];
+    for (i = j = 0, len = workers.length; j < len; i = ++j) {
       _ = workers[i];
       workers[i] = {
         process: null,
@@ -20,9 +20,9 @@
       });
       workers[i].process.start();
       config.worker.port += 1;
-      _results.push(logger.info("phear", "Worker " + (i + 1) + " of " + n + " started."));
+      results.push(logger.info("phear", "Worker " + (i + 1) + " of " + n + " started."));
     }
-    return _results;
+    return results;
   };
 
   serve = function(port) {
@@ -40,10 +40,6 @@
     var cache_key, cache_namespace, respond;
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    if (mode !== "development" && !ip_allowed(req.headers["real-ip"])) {
-      res.statusCode = 403;
-      return close_response("phear", "Forbiddena.", res);
-    }
     if (req.query.fetch_url == null) {
       res.statusCode = 400;
       return close_response("phear", "No URL requested, you have to set fetch_url=encoded_url.", res);
@@ -65,14 +61,14 @@
     }
     cache_key = "" + cache_namespace + req.query.fetch_url;
     return memcached.get(cache_key, function(error, data) {
-      var headers, worker, worker_request_url;
+      var error1, headers, worker, worker_request_url;
       if ((error != null) || (data == null) || req.query.force in ["true", "1"]) {
         worker = random_worker();
         headers = {};
         if (req.query.headers != null) {
           try {
             headers = JSON.parse(req.query.headers);
-          } catch (_error) {
+          } catch (error1) {
             res.statusCode = 400;
             return close_response("phear", "Additional headers not properly formatted, e.g.: encodeURIComponent('{extra: \"Yes.\"}').", res);
           }
@@ -105,8 +101,8 @@
   };
 
   random_worker = function() {
-    var worker, _ref;
-    while ((worker != null ? (_ref = worker.process) != null ? _ref.status : void 0 : void 0) !== "running") {
+    var ref, worker;
+    while ((worker != null ? (ref = worker.process) != null ? ref.status : void 0 : void 0) !== "running") {
       worker = workers[Math.floor(Math.random() * workers.length)];
     }
     return worker;
@@ -130,10 +126,10 @@
   };
 
   stop = function() {
-    var worker, _i, _len;
+    var j, len, worker;
     logger.info("phear", "Kill process and workers.");
-    for (_i = 0, _len = workers.length; _i < _len; _i++) {
-      worker = workers[_i];
+    for (j = 0, len = workers.length; j < len; j++) {
+      worker = workers[j];
       worker.process.stop();
     }
     return process.kill();
