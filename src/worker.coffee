@@ -22,9 +22,9 @@ run_server = ->
     logger.info this_inst, "Request origin: #{request.headers['real-ip']}" if request.headers["real-ip"]?
     
     # In all environments except development, check the IPs and only allow pre-defined addresses
-#    if config.environment != "development" and not ip_allowed(request.headers["real-ip"])
-#      response.statusCode = 403
-#      return close_response(this_inst, "Forbidden.", response)
+    if config.environment != "development" and not ip_allowed(request.headers["real-ip"])
+      response.statusCode = 403
+      return close_response(this_inst, "Forbidden.", response)
     
     # Get the URL from the request
     request_url = url.parse(request.url, true)

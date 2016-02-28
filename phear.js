@@ -40,6 +40,10 @@
     var cache_key, cache_namespace, respond;
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    if (mode !== "development" && !ip_allowed(req.headers["real-ip"])) {
+      res.statusCode = 403;
+      return close_response("phear", "Forbiddena.", res);
+    }
     if (req.query.fetch_url == null) {
       res.statusCode = 400;
       return close_response("phear", "No URL requested, you have to set fetch_url=encoded_url.", res);
